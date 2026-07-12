@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>designerandrecmg — Linkbio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type=".webp" href="webp\designerandrecmg-ft.webp">
+
+<style>
+  :root{
+    --green:#ABE054;
+    --orange:#FA553C;
+    --black:#0A0A0B;
+    --offwhite:#F5F2EA;
+    --glass:rgba(245,242,234,0.07);
+    --glass-strong:rgba(245,242,234,0.12);
+    --glass-border:rgba(245,242,234,0.16);
+    --shadow:rgba(0,0,0,0.45);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  html,body{
+    height:100%;
+    background:var(--black);
+    color:var(--offwhite);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ---------- ambient wallpaper ---------- */
+  .wallpaper{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    overflow:hidden;
+    background:var(--black);
+    contain:paint;
+  }
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:0.55;
+    will-change:transform;
+    transform:translateZ(0);
+    backface-visibility:hidden;
+  }
+  .blob--green{
+    width:60vmax;height:60vmax;
+    top:-25vmax; left:-20vmax;
+    background:radial-gradient(circle at 30% 30%, var(--green), transparent 70%);
+    animation:drift1 22s ease-in-out infinite alternate;
+  }
+  .blob--orange{
+    width:55vmax;height:55vmax;
+    bottom:-24vmax; right:-18vmax;
+    background:radial-gradient(circle at 70% 70%, var(--orange), transparent 70%);
+    animation:drift2 26s ease-in-out infinite alternate;
+  }
+  @keyframes drift1{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(6vmax,4vmax,0) scale(1.08);}
+  }
+  @keyframes drift2{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(-5vmax,-6vmax,0) scale(1.05);}
+  }
+
+  /* on touch devices, freeze the drift: backdrop-filter on the cards has to
+     re-sample whatever is moving behind it every frame, and that combo
+     (live blur + live blur) is the main source of jank on phones */
+  @media (hover:none) and (pointer:coarse), (max-width:600px){
+    .blob{ animation:none; }
+  }
+
+  /* film grain: small tile repeated instead of one full-viewport turbulence
+     render, which is the expensive part on high-DPI mobile screens */
+  .grain{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    opacity:0.045;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-repeat:repeat;
+    background-size:180px 180px;
+    transform:translateZ(0);
+  }
+
+  /* ---------- layout ---------- */
+  .page{
+    position:relative;
+    z-index:2;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:clamp(28px, 8vw, 64px) 20px 40px;
+  }
+
+  .card{
+    width:100%;
+    max-width:420px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+
+  /* dynamic-island style deco pill */
+  .island{
+    width:88px;
+    height:26px;
+    background:rgba(0,0,0,0.55);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    backdrop-filter:blur(12px);
+  }
+  .island span{
+    width:5px;height:5px;border-radius:50%;
+    background:var(--glass-border);
+  }
+  .island span:first-child{
+    width:8px;
+    background:linear-gradient(90deg,var(--green),var(--orange));
+  }
+
+  /* avatar mark */
+/* avatar */
+.avatar{
+    width:92px;
+    height:92px;
+    border-radius:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 20px 40px -12px var(--shadow);
+    margin-top:6px;
+}
+
+.avatar::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        115deg,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0) 35%
+    );
+    pointer-events:none;
+    z-index:2;
+}
+
+.avatar-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+  .identity{
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .name{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:700;
+    font-size:clamp(24px,6vw,30px);
+    letter-spacing:-0.02em;
+  }
+  .role{
+    font-size:14px;
+    font-weight:500;
+    color:rgba(245,242,234,0.6);
+    letter-spacing:0.02em;
+  }
+  .bioline{
+    font-size:15px;
+    font-weight:500;
+    color:var(--offwhite);
+    margin-top:4px;
+  }
+
+  .locality{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(245,242,234,0.45);
+    margin-top:2px;
+  }
+  .locality svg{width:11px;height:11px;flex-shrink:0;}
+
+  .divider{
+    width:40px;
+    height:3px;
+    border-radius:2px;
+    background:linear-gradient(90deg,var(--green),var(--orange));
+    margin:8px 0 2px;
+  }
+
+  /* ---------- links ---------- */
+  .links{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .linkcard{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    width:100%;
+    padding:16px 18px;
+    border-radius:20px;
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    text-decoration:none;
+    color:var(--offwhite);
+    overflow:hidden;
+    isolation:isolate;
+    transform:translateZ(0);
+    will-change:transform;
+    transition:transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .linkcard::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    background:linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 35%);
+    opacity:0.8;
+  }
+  .linkcard::after{
+    content:'';
+    position:absolute;
+    top:0; bottom:0; left:-60%;
+    width:40%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform:skewX(-20deg);
+    transition:left 0.7s ease;
+  }
+  .linkcard:hover,
+  .linkcard:focus-visible{
+    transform:translateY(-3px) translateZ(0);
+    background:var(--glass-strong);
+    box-shadow:0 16px 30px -14px var(--shadow);
+  }
+  .linkcard:hover::after,
+  .linkcard:focus-visible::after{
+    left:120%;
+  }
+  .linkcard:focus-visible{
+    outline:2px solid var(--offwhite);
+    outline-offset:3px;
+  }
+  .linkcard.accent-orange:hover{ border-color:rgba(250,85,60,0.55); }
+  .linkcard.accent-green:hover{ border-color:rgba(171,224,84,0.55); }
+
+  /* coming-soon state: same glass, but visibly inactive */
+  .linkcard--soon{
+    cursor:default;
+    border-style:dashed;
+    opacity:0.8;
+  }
+  .linkcard--soon:hover,
+  .linkcard--soon:focus-visible{
+    transform:translateZ(0);
+    box-shadow:none;
+    background:var(--glass);
+    border-color:var(--glass-border);
+  }
+  .linkcard--soon .icon{
+    background:rgba(245,242,234,0.08);
+    color:rgba(245,242,234,0.55);
+  }
+  .badge-soon{
+    margin-left:auto;
+    flex-shrink:0;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange);
+    background:rgba(250,85,60,0.14);
+    border:1px solid rgba(250,85,60,0.35);
+    padding:5px 9px;
+    border-radius:999px;
+  }
+
+  .icon{
+    flex-shrink:0;
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .accent-orange .icon{ background:rgba(250,85,60,0.16); color:var(--orange); }
+  .accent-green .icon{ background:rgba(171,224,84,0.16); color:var(--green); }
+  .accent-mix .icon{ background:linear-gradient(135deg, rgba(171,224,84,0.18), rgba(250,85,60,0.18)); color:var(--offwhite); }
+  .icon svg{width:20px;height:20px;}
+
+  .linktext{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    min-width:0;
+  }
+  .linktitle{
+    font-weight:700;
+    font-size:15px;
+  }
+  .linksub{
+    font-size:12.5px;
+    color:rgba(245,242,234,0.55);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .arrow{
+    margin-left:auto;
+    flex-shrink:0;
+    opacity:0.5;
+    transition:transform 0.35s ease, opacity 0.35s ease;
+  }
+  .linkcard:hover .arrow{ transform:translateX(3px); opacity:0.9; }
+  .arrow svg{width:16px;height:16px;}
+
+  footer{
+    margin-top:14px;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:rgba(245,242,234,0.35);
+    text-align:center;
+  }
+
+  @media (max-width:360px){
+    .avatar{width:80px;height:80px;}
+    .avatar-mark{font-size:36px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .blob{animation:none;}
+    .linkcard, .linkcard::after, .arrow{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="wallpaper">
+    <div class="blob blob--green"></div>
+    <div class="blob blob--orange"></div>
+  </div>
+  <div class="grain"></div>
+
+  <main class="page">
+    <div class="card">
+
+      <div class="island"><span></span><span></span></div>
+
+    <div class="avatar">
+        <img src="webp\designerandrecmg-ft.webp" alt="Avatar" class="avatar-img">
+    </div>
+
+      <div class="identity">
+        <div class="name">designerandrecmg</div>
+        <div class="role">Design gráfico & digital</div>
+        <div class="bioline">Gosto de criar, questionar e encontrar novas formas de comunicar atráves do design... chama eu!</div>
+        <div class="locality">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Maringá, PR
+        </div>
+        <div class="divider"></div>
+      </div>
+
+      <nav class="links">
+
+        <a class="linkcard accent-orange" href="https://designerandrecmg.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </span>
+          <span class="linktext">
+            <span class="linktitle">Site &amp; Portfólio</span>
+            <span class="linksub">designerandrecmg.vercel.app</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </span>
+        </a>
+
+        <a class="linkcard accent-green" href="https://www.behance.net/designerandrecmg" target="_blank" rel="noopener noreferrer">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="9" height="10" rx="1.5"></rect><path d="M2 11h9"></path><path d="M14 12.5c0-2.2 1.6-4 4-4s4 1.8 4 4c0 .3 0 .6-.1.9h-6.7"></path><path d="M14.3 13.4c.4 1.7 1.8 2.8 3.6 2.8 1.4 0 2.4-.6 3-1.6"></path><path d="M14 7h4.5"></path></svg>
+          </span>
+          <span class="linktext">
+            <span class="linktitle">Behance</span>
+            <span class="linksub">@designerandrecmg</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </span>
+        </a>
+
+        <a class="linkcard accent-mix" href="https://www.instagram.com/designerandrecmg" target="_blank" rel="noopener noreferrer">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle></svg>
+          </span>
+          <span class="linktext">
+            <span class="linktitle">Instagram</span>
+            <span class="linksub">@designerandrecmg</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </span>
+        </a>
+
+        <div class="linkcard linkcard--soon" aria-disabled="true">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>
+          </span>
+          <span class="linktext">
+            <span class="linktitle">@vyrecmg</span>
+            <span class="linksub">Em andamento</span>
+          </span>
+          <span class="badge-soon">Em andamento</span>
+        </div>
+
+      </nav>
+
+      <footer>@designerandrecmg and @vyrecmg — 2026</footer>
+
+    </div>
+  </main>
+
+</body>
+</html>
