@@ -2,23 +2,35 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>designerandrecmg — Linkbio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type=".png" href="webp\designerandrecmg-id.jpeg">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type=".png" href="webp/designerandrecmg-id.jpeg">
 
 <style>
   :root{
     --green:#ABE054;
     --orange:#FA553C;
-    --black:#0A0A0B;
+    --blue:#0A84FF;
+    --purple:#BF5AF2;
+    --pink:#FF375F;
+    --teal:#64D2FF;
+    --black:#050506;
     --offwhite:#F5F2EA;
-    --glass:rgba(245,242,234,0.07);
-    --glass-strong:rgba(245,242,234,0.12);
-    --glass-border:rgba(245,242,234,0.16);
+    --text-dim:rgba(245,242,234,0.62);
+    --text-faint:rgba(245,242,234,0.42);
+
+    --spring:cubic-bezier(0.34,1.56,0.64,1);
+    --spring-soft:cubic-bezier(0.2,0.8,0.2,1);
+    --apple:cubic-bezier(0.32,0.72,0,1);
+
+    --glass-bg:linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.045));
+    --glass-border:rgba(255,255,255,0.16);
+    --glass-blur:blur(22px) saturate(185%);
     --shadow:rgba(0,0,0,0.45);
+    --safe-top:env(safe-area-inset-top, 0px);
   }
 
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -27,65 +39,81 @@
     height:100%;
     background:var(--black);
     color:var(--offwhite);
-    font-family:'Inter',sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
     overflow-x:hidden;
   }
 
-  /* ---------- ambient wallpaper ---------- */
+  /* ============ ambient wallpaper (iOS 26 aurora) ============ */
   .wallpaper{
     position:fixed;
     inset:0;
     z-index:0;
     overflow:hidden;
-    background:var(--black);
+    background:radial-gradient(120% 90% at 20% 0%, #131018 0%, var(--black) 55%);
     contain:paint;
   }
-  .blob{
+  .orb{
     position:absolute;
     border-radius:50%;
-    filter:blur(70px);
-    opacity:0.55;
+    filter:blur(80px);
     will-change:transform;
     transform:translateZ(0);
     backface-visibility:hidden;
   }
-  .blob--green{
-    width:60vmax;height:60vmax;
-    top:-25vmax; left:-20vmax;
-    background:radial-gradient(circle at 30% 30%, var(--green), transparent 70%);
-    animation:drift1 22s ease-in-out infinite alternate;
+  .orb--green{
+    width:58vmax;height:58vmax;
+    top:-26vmax; left:-18vmax;
+    background:radial-gradient(circle at 32% 32%, var(--green), transparent 68%);
+    animation:driftA 26s ease-in-out infinite alternate, hueA 40s linear infinite;
   }
-  .blob--orange{
-    width:55vmax;height:55vmax;
-    bottom:-24vmax; right:-18vmax;
-    background:radial-gradient(circle at 70% 70%, var(--orange), transparent 70%);
-    animation:drift2 26s ease-in-out infinite alternate;
+  .orb--orange{
+    width:52vmax;height:52vmax;
+    bottom:-24vmax; right:-16vmax;
+    background:radial-gradient(circle at 68% 68%, var(--orange), transparent 68%);
+    animation:driftB 30s ease-in-out infinite alternate, hueB 46s linear infinite;
   }
-  @keyframes drift1{
+  .orb--blue{
+    width:40vmax;height:40vmax;
+    top:38%; left:52%;
+    background:radial-gradient(circle at 50% 50%, var(--purple), transparent 70%);
+    opacity:0.5;
+    animation:driftC 34s ease-in-out infinite alternate;
+  }
+  @keyframes driftA{
     from{transform:translate3d(0,0,0) scale(1);}
-    to{transform:translate3d(6vmax,4vmax,0) scale(1.08);}
+    to{transform:translate3d(5vmax,4vmax,0) scale(1.1);}
   }
-  @keyframes drift2{
+  @keyframes driftB{
     from{transform:translate3d(0,0,0) scale(1);}
-    to{transform:translate3d(-5vmax,-6vmax,0) scale(1.05);}
+    to{transform:translate3d(-4vmax,-5vmax,0) scale(1.06);}
+  }
+  @keyframes driftC{
+    from{transform:translate3d(0,0,0) scale(1);}
+    to{transform:translate3d(3vmax,-3vmax,0) scale(1.12);}
+  }
+  @keyframes hueA{
+    from{filter:blur(80px) hue-rotate(0deg);}
+    to{filter:blur(80px) hue-rotate(60deg);}
+  }
+  @keyframes hueB{
+    from{filter:blur(80px) hue-rotate(0deg);}
+    to{filter:blur(80px) hue-rotate(-45deg);}
   }
 
-  /* on touch devices, freeze the drift: backdrop-filter on the cards has to
-     re-sample whatever is moving behind it every frame, and that combo
-     (live blur + live blur) is the main source of jank on phones */
+  /* on touch: freeze drift so backdrop-filter on glass cards stays smooth */
   @media (hover:none) and (pointer:coarse), (max-width:600px){
-    .blob{ animation:none; }
+    .orb{animation:none;}
   }
 
-  /* film grain: small tile repeated instead of one full-viewport turbulence
-     render, which is the expensive part on high-DPI mobile screens */
+  /* film grain tile */
   .grain{
     position:fixed;
     inset:0;
     z-index:1;
     pointer-events:none;
-    opacity:0.045;
+    opacity:0.05;
     mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     background-repeat:repeat;
@@ -93,117 +121,158 @@
     transform:translateZ(0);
   }
 
-  /* ---------- layout ---------- */
+  /* ============ status bar ============ */
+  .statusbar{
+    position:relative;
+    z-index:10;
+    width:100%;
+    max-width:430px;
+    margin:0 auto;
+    padding:calc(var(--safe-top) + 14px) 24px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:0.01em;
+    color:var(--offwhite);
+  }
+  .statusbar .time{min-width:52px;}
+  .island{
+    width:104px;
+    height:30px;
+    background:rgba(10,10,12,0.85);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:22px;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.08);
+    animation:islandBreathe 5s ease-in-out infinite;
+  }
+  .island .lens{
+    width:12px;height:12px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #2a2a33, #0a0a0c 70%);
+    box-shadow:inset 0 0 2px rgba(255,255,255,0.18);
+  }
+  .island .led{
+    width:3px;height:3px;border-radius:50%;
+    background:rgba(245,242,234,0.4);
+    box-shadow:0 0 4px rgba(250,85,60,0.9);
+  }
+  @keyframes islandBreathe{
+    0%,100%{transform:translateX(-50%) scale(1);}
+    50%{transform:translateX(-50%) scale(1.02);}
+  }
+  .sysicons{display:flex;align-items:center;gap:7px;min-width:52px;justify-content:flex-end;}
+  .sysicons svg{display:block;}
+  .batt{position:relative;}
+
+  /* ============ layout ============ */
   .page{
     position:relative;
     z-index:2;
-    min-height:100vh;
+    min-height:calc(100vh - 44px);
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    padding:clamp(28px, 8vw, 64px) 20px 40px;
+    padding:clamp(16px, 6vw, 40px) 22px 40px;
   }
-
   .card{
     width:100%;
     max-width:420px;
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:22px;
+    gap:24px;
   }
 
-  /* dynamic-island style deco pill */
-  .island{
-    width:88px;
-    height:26px;
-    background:rgba(0,0,0,0.55);
-    border:1px solid var(--glass-border);
-    border-radius:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    backdrop-filter:blur(12px);
-  }
-  .island span{
-    width:5px;height:5px;border-radius:50%;
-    background:var(--glass-border);
-  }
-  .island span:first-child{
-    width:8px;
-    background:linear-gradient(90deg,var(--green),var(--orange));
-  }
-
-  /* avatar mark */
-/* avatar */
-.avatar{
-    width:92px;
-    height:92px;
-    border-radius:24px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  /* ---------- profile ---------- */
+  .avatar{
+    width:104px;height:104px;
+    border-radius:28px;
     position:relative;
-    overflow:hidden;
-    box-shadow:0 20px 40px -12px var(--shadow);
-    margin-top:6px;
-}
-
-.avatar::after{
+    padding:5px;
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.25), 0 22px 44px -14px var(--shadow);
+    margin-top:8px;
+  }
+  .avatar .img{
+    width:100%;height:100%;
+    border-radius:23px;
+    object-fit:cover;
+    display:block;
+  }
+  .avatar::after{
     content:'';
     position:absolute;
     inset:0;
-    background:linear-gradient(
-        115deg,
-        rgba(255,255,255,0.35) 0%,
-        rgba(255,255,255,0) 35%
-    );
+    border-radius:inherit;
+    background:linear-gradient(115deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 34%);
     pointer-events:none;
     z-index:2;
-}
-
-.avatar-img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
-  .identity{
-    text-align:center;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
   }
+  .avatar::before{
+    content:'';
+    position:absolute;
+    top:0; left:10%; right:10%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    border-radius:1px;
+    z-index:3;
+  }
+  .avatar-glow{
+    position:absolute;
+    inset:-14px;
+    border-radius:36px;
+    background:conic-gradient(from 120deg, var(--green), var(--teal), var(--purple), var(--orange), var(--green));
+    filter:blur(26px);
+    opacity:0.5;
+    z-index:-1;
+    animation:glowSpin 12s linear infinite;
+  }
+  @keyframes glowSpin{
+    from{filter:blur(26px) hue-rotate(0deg);}
+    to{filter:blur(26px) hue-rotate(360deg);}
+  }
+
+  .identity{text-align:center;display:flex;flex-direction:column;gap:7px;}
   .name{
-    font-family:'Bricolage Grotesque',sans-serif;
+    font-family:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Inter",sans-serif;
     font-weight:700;
-    font-size:clamp(24px,6vw,30px);
-    letter-spacing:-0.02em;
+    font-size:clamp(25px,6.5vw,31px);
+    letter-spacing:-0.03em;
   }
   .role{
     font-size:14px;
     font-weight:500;
-    color:rgba(245,242,234,0.6);
+    color:var(--text-dim);
     letter-spacing:0.02em;
   }
   .bioline{
     font-size:15px;
     font-weight:500;
     color:var(--offwhite);
-    margin-top:4px;
+    margin-top:2px;
+    max-width:340px;
   }
-
   .locality{
     display:inline-flex;
     align-items:center;
+    justify-content:center;
     gap:6px;
     font-size:12px;
     font-weight:600;
     letter-spacing:0.08em;
     text-transform:uppercase;
-    color:rgba(245,242,234,0.45);
+    color:var(--text-faint);
     margin-top:2px;
   }
   .locality svg{width:11px;height:11px;flex-shrink:0;}
@@ -212,116 +281,241 @@
     width:40px;
     height:3px;
     border-radius:2px;
-    background:linear-gradient(90deg,var(--green),var(--orange));
-    margin:8px 0 2px;
+    background:linear-gradient(90deg, var(--green), var(--orange));
+    margin:8px auto 0;
   }
 
-  /* ---------- links ---------- */
+  /* ---------- live activity pill ---------- */
+  .liveactivity{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 16px;
+    border-radius:999px;
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.18), 0 10px 24px -10px var(--shadow);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--offwhite);
+    position:relative;
+  }
+  .liveactivity::before{
+    content:'';
+    position:absolute;
+    top:0; left:12%; right:12%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  }
+  .pulse{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 0 0 rgba(171,224,84,0.55);
+    animation:livePulse 2s cubic-bezier(0.32,0.72,0,1) infinite;
+  }
+  @keyframes livePulse{
+    0%{box-shadow:0 0 0 0 rgba(171,224,84,0.55);}
+    70%{box-shadow:0 0 0 9px rgba(171,224,84,0);}
+    100%{box-shadow:0 0 0 0 rgba(171,224,84,0);}
+  }
+
+  /* ---------- app icon grid (home screen) ---------- */
+  .appgrid{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:18px 12px;
+    margin-top:4px;
+  }
+  .app{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:7px;
+    text-decoration:none;
+    color:var(--offwhite);
+    -webkit-tap-highlight-color:transparent;
+    animation:appIn 0.9s var(--spring) both;
+  }
+  .app:nth-child(1){animation-delay:0.18s;}
+  .app:nth-child(2){animation-delay:0.27s;}
+  .app:nth-child(3){animation-delay:0.36s;}
+  .app:nth-child(4){animation-delay:0.45s;}
+  @keyframes appIn{
+    0%{opacity:0; transform:translateY(26px) scale(0.6);}
+    100%{opacity:1; transform:translateY(0) scale(1);}
+  }
+  .tile{
+    width:66px;height:66px;
+    border-radius:17px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.3), 0 12px 22px -10px var(--shadow);
+    transition:transform 0.45s var(--spring), box-shadow 0.4s ease;
+    will-change:transform;
+  }
+  .tile::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(115deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 38%);
+    pointer-events:none;
+  }
+  .tile svg{
+    width:30px;height:30px;
+    color:#fff;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,0.25));
+    transition:transform 0.5s var(--spring);
+    z-index:1;
+  }
+  .app:hover .tile{transform:translateY(-5px) scale(1.06); box-shadow:inset 0 1px 1px rgba(255,255,255,0.35), 0 20px 30px -12px var(--shadow);}
+  .app:hover .tile svg{transform:scale(1.12) rotate(-4deg);}
+  .app:active .tile{transform:scale(0.9); transition-duration:0.12s;}
+  .app:focus-visible .tile{outline:2px solid var(--offwhite); outline-offset:3px;}
+  .app .label{
+    font-size:11.5px;
+    font-weight:500;
+    color:rgba(245,242,234,0.92);
+    text-shadow:0 1px 3px rgba(0,0,0,0.55);
+    max-width:74px;
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .app .sub{
+    font-size:10px;
+    font-weight:500;
+    color:var(--text-faint);
+    text-shadow:0 1px 3px rgba(0,0,0,0.55);
+    max-width:74px;
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    margin-top:-4px;
+  }
+  .tile--site{background:linear-gradient(150deg,#3DDC97 0%, #0AA97E 55%, #046E77 100%);}
+  .tile--behance{background:linear-gradient(150deg,#5C7CFA 0%, #3B5BDB 55%, #2B2A7A 100%);}
+  .tile--insta{background:linear-gradient(135deg,#F5C355 0%, #F5556D 45%, #9B3FD0 100%);}
+  .tile--soon{
+    background:rgba(255,255,255,0.09);
+    border:1px dashed rgba(255,255,255,0.3);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+  }
+  .tile--soon svg{animation:spin 6s linear infinite;}
+  @keyframes spin{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+  .badge-soon{
+    position:absolute;
+    top:4px; right:4px;
+    z-index:2;
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#fff;
+    background:var(--orange);
+    padding:2px 5px;
+    border-radius:6px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  /* ---------- liquid glass link cards ---------- */
   .links{
     width:100%;
     display:flex;
     flex-direction:column;
-    gap:14px;
+    gap:13px;
+    margin-top:6px;
   }
-
   .linkcard{
     position:relative;
     display:flex;
     align-items:center;
-    gap:16px;
+    gap:15px;
     width:100%;
-    padding:16px 18px;
+    padding:15px 17px;
     border-radius:20px;
-    background:var(--glass);
+    background:var(--glass-bg);
     border:1px solid var(--glass-border);
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.16), 0 18px 34px -16px var(--shadow);
     text-decoration:none;
     color:var(--offwhite);
     overflow:hidden;
     isolation:isolate;
     transform:translateZ(0);
     will-change:transform;
-    transition:transform 0.35s cubic-bezier(.2,.8,.2,1), background 0.35s ease, border-color .35s ease, box-shadow .35s ease;
+    transition:transform 0.5s var(--spring), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    animation:cardIn 0.9s var(--spring) both;
+  }
+  .linkcard:nth-child(1){animation-delay:0.28s;}
+  .linkcard:nth-child(2){animation-delay:0.36s;}
+  .linkcard:nth-child(3){animation-delay:0.44s;}
+  .linkcard:nth-child(4){animation-delay:0.52s;}
+  @keyframes cardIn{
+    0%{opacity:0; transform:translateY(24px) scale(0.97);}
+    100%{opacity:1; transform:translateY(0) scale(1);}
   }
   .linkcard::before{
     content:'';
     position:absolute;
-    inset:0;
-    z-index:-1;
-    background:linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 35%);
-    opacity:0.8;
+    top:0; left:8%; right:8%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+    z-index:1;
   }
   .linkcard::after{
     content:'';
     position:absolute;
-    top:0; bottom:0; left:-60%;
-    width:40%;
-    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.25), transparent);
+    top:-20%; bottom:-20%; left:-30%;
+    width:22%;
+    background:linear-gradient(115deg, transparent, rgba(255,255,255,0.28), transparent);
     transform:skewX(-20deg);
-    transition:left 0.7s ease;
+    transition:left 0.9s cubic-bezier(0.32,0.72,0,1);
+    pointer-events:none;
   }
   .linkcard:hover,
   .linkcard:focus-visible{
-    transform:translateY(-3px) translateZ(0);
-    background:var(--glass-strong);
-    box-shadow:0 16px 30px -14px var(--shadow);
+    transform:translateY(-3px) scale(1.015);
+    background:linear-gradient(135deg, rgba(255,255,255,0.19), rgba(255,255,255,0.07));
+    border-color:rgba(255,255,255,0.28);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.24), 0 26px 44px -18px var(--shadow);
   }
-  .linkcard:hover::after,
-  .linkcard:focus-visible::after{
-    left:120%;
-  }
-  .linkcard:focus-visible{
-    outline:2px solid var(--offwhite);
-    outline-offset:3px;
-  }
-  .linkcard.accent-orange:hover{ border-color:rgba(250,85,60,0.55); }
-  .linkcard.accent-green:hover{ border-color:rgba(171,224,84,0.55); }
-
-  /* coming-soon state: same glass, but visibly inactive */
-  .linkcard--soon{
-    cursor:default;
-    border-style:dashed;
-    opacity:0.8;
-  }
-  .linkcard--soon:hover,
-  .linkcard--soon:focus-visible{
-    transform:translateZ(0);
-    box-shadow:none;
-    background:var(--glass);
-    border-color:var(--glass-border);
-  }
-  .linkcard--soon .icon{
-    background:rgba(245,242,234,0.08);
-    color:rgba(245,242,234,0.55);
-  }
-  .badge-soon{
-    margin-left:auto;
-    flex-shrink:0;
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--orange);
-    background:rgba(250,85,60,0.14);
-    border:1px solid rgba(250,85,60,0.35);
-    padding:5px 9px;
-    border-radius:999px;
-  }
+  .linkcard:active{transform:translateY(-1px) scale(0.97); transition-duration:0.12s;}
+  .linkcard:hover::after{left:130%;}
+  .linkcard:focus-visible{outline:2px solid var(--offwhite); outline-offset:3px;}
+  .linkcard.accent-orange:hover{border-color:rgba(250,85,60,0.5);}
+  .linkcard.accent-green:hover{border-color:rgba(171,224,84,0.5);}
 
   .icon{
     flex-shrink:0;
-    width:42px;
-    height:42px;
-    border-radius:13px;
+    width:42px;height:42px;
+    border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
+    position:relative;
+    overflow:hidden;
   }
-  .accent-orange .icon{ background:rgba(250,85,60,0.16); color:var(--orange); }
-  .accent-green .icon{ background:rgba(171,224,84,0.16); color:var(--green); }
-  .accent-mix .icon{ background:linear-gradient(135deg, rgba(171,224,84,0.18), rgba(250,85,60,0.18)); color:var(--offwhite); }
-  .icon svg{width:20px;height:20px;}
+  .icon::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(115deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%);
+  }
+  .accent-orange .icon{background:rgba(250,85,60,0.18); color:var(--orange); box-shadow:inset 0 0 0 1px rgba(250,85,60,0.3);}
+  .accent-green .icon{background:rgba(171,224,84,0.18); color:var(--green); box-shadow:inset 0 0 0 1px rgba(171,224,84,0.3);}
+  .accent-mix .icon{background:linear-gradient(135deg, rgba(171,224,84,0.2), rgba(250,85,60,0.2)); color:var(--offwhite); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);}
+  .icon svg{width:20px;height:20px;z-index:1;}
 
   .linktext{
     display:flex;
@@ -329,13 +523,10 @@
     gap:2px;
     min-width:0;
   }
-  .linktitle{
-    font-weight:700;
-    font-size:15px;
-  }
+  .linktitle{font-weight:600; font-size:15px; letter-spacing:-0.01em;}
   .linksub{
     font-size:12.5px;
-    color:rgba(245,242,234,0.55);
+    color:var(--text-dim);
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
@@ -345,52 +536,89 @@
     margin-left:auto;
     flex-shrink:0;
     opacity:0.5;
-    transition:transform 0.35s ease, opacity 0.35s ease;
+    transition:transform 0.45s var(--spring), opacity 0.35s ease;
   }
-  .linkcard:hover .arrow{ transform:translateX(3px); opacity:0.9; }
+  .linkcard:hover .arrow{transform:translateX(4px) scale(1.15); opacity:0.95;}
   .arrow svg{width:16px;height:16px;}
 
+  .linkcard--soon{
+    cursor:default;
+    border-style:dashed;
+    opacity:0.85;
+  }
+  .linkcard--soon:hover,
+  .linkcard--soon:focus-visible{
+    transform:none;
+    background:var(--glass-bg);
+    border-color:var(--glass-border);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.16);
+  }
+  .badge{
+    margin-left:auto;
+    flex-shrink:0;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--orange);
+    background:rgba(250,85,60,0.15);
+    border:1px solid rgba(250,85,60,0.4);
+    padding:5px 9px;
+    border-radius:999px;
+  }
+
   footer{
-    margin-top:14px;
+    margin-top:10px;
     font-size:11px;
     letter-spacing:0.1em;
     text-transform:uppercase;
-    color:rgba(245,242,234,0.35);
+    color:var(--text-faint);
     text-align:center;
   }
+  footer .sep{margin:0 6px; opacity:0.5;}
 
   @media (max-width:360px){
-    .avatar{width:80px;height:80px;}
-    .avatar-mark{font-size:36px;}
+    .tile{width:60px;height:60px;border-radius:15px;}
+    .avatar{width:94px;height:94px;border-radius:25px;}
   }
 
   @media (prefers-reduced-motion:reduce){
-    .blob{animation:none;}
-    .linkcard, .linkcard::after, .arrow{transition:none;}
+    .orb, .avatar-glow, .island, .pulse, .tile--soon svg{animation:none;}
+    .linkcard, .tile, .app, .arrow{transition:none;}
+    .app, .linkcard{animation-duration:0.01s;}
   }
 </style>
 </head>
 <body>
 
   <div class="wallpaper">
-    <div class="blob blob--green"></div>
-    <div class="blob blob--orange"></div>
+    <div class="orb orb--green"></div>
+    <div class="orb orb--orange"></div>
+    <div class="orb orb--blue"></div>
   </div>
   <div class="grain"></div>
+
+  <div class="statusbar" id="statusbar">
+    <span class="time" id="clock">9:41</span>
+    <div class="island"><span class="lens"></span><span class="led"></span></div>
+    <div class="sysicons">
+      <svg width="18" height="13" viewBox="0 0 18 13" fill="currentColor"><path d="M9 11.5l2.2-2.7a3 3 0 0 0-4.4 0L9 11.5z"/><path d="M2.7 4.6a8.6 8.6 0 0 1 12.6 0l-1.5 1.7a6.6 6.6 0 0 0-9.6 0L2.7 4.6z" opacity="0.55"/><path d="M5 7.3a5.4 5.4 0 0 1 8 0l-1.5 1.7a3.4 3.4 0 0 0-5 0L5 7.3z" opacity="0.75"/></svg>
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0.5" y="0.5" width="13" height="11" rx="3.5" opacity="0.35"/><rect x="2.2" y="2.2" width="9.6" height="7.6" rx="2"/><path d="M14.5 4.2a2 2 0 0 1 0 3.6v-3.6z"/></svg>
+    </div>
+  </div>
 
   <main class="page">
     <div class="card">
 
-      <div class="island"><span></span><span></span></div>
-
-    <div class="avatar">
-        <img src="webp\designerandrecmg-id.jpeg" alt="Avatar" class="avatar-img">
-    </div>
+      <div class="avatar">
+        <div class="avatar-glow"></div>
+        <img src="webp/designerandrecmg-id.jpeg" alt="Avatar de designerandrecmg" class="img">
+      </div>
 
       <div class="identity">
         <div class="name">designerandrecmg</div>
-        <div class="role">Design gráfico & digital</div>
-        <div class="bioline">Gosto de criar, questionar e encontrar novas formas de comunicar atráves do design... chama eu!</div>
+        <div class="role">Design gráfico &amp; digital</div>
+        <div class="bioline">Gosto de criar, questionar e encontrar novas formas de comunicar através do design... chama eu!</div>
         <div class="locality">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           Maringá, PR
@@ -398,8 +626,38 @@
         <div class="divider"></div>
       </div>
 
-      <nav class="links">
+      <div class="liveactivity"><span class="pulse"></span> Disponível para novos projetos</div>
 
+      <nav class="appgrid" aria-label="Atalhos">
+        <a class="app" href="https://designerandrecmg.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <span class="tile tile--site">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </span>
+          <span class="label">Site</span>
+        </a>
+        <a class="app" href="https://www.behance.net/designerandrecmg" target="_blank" rel="noopener noreferrer">
+          <span class="tile tile--behance">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h7.5a2.5 2.5 0 0 1 0 5H2z"/><path d="M2 12h8.2a2.8 2.8 0 0 1 0 5.6H2z"/><path d="M15.5 9.4h6"/><path d="M18.5 9.4c-1.9 0-3 1.3-3 3s1.1 3 3 3c1.2 0 2-.5 2.6-1.4"/></svg>
+          </span>
+          <span class="label">Behance</span>
+        </a>
+        <a class="app" href="https://www.instagram.com/designerandrecmg" target="_blank" rel="noopener noreferrer">
+          <span class="tile tile--insta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"></circle></svg>
+          </span>
+          <span class="label">Instagram</span>
+        </a>
+        <div class="app" role="note" aria-disabled="true">
+          <span class="tile tile--soon">
+            <span class="badge-soon">Em breve</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>
+          </span>
+          <span class="label">@vyrecmg</span>
+          <span class="sub">em criação</span>
+        </div>
+      </nav>
+
+      <nav class="links" aria-label="Links">
         <a class="linkcard accent-orange" href="https://designerandrecmg.vercel.app/" target="_blank" rel="noopener noreferrer">
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
@@ -439,23 +697,75 @@
           </span>
         </a>
 
-        <div class="linkcard linkcard--soon" aria-disabled="true">
+        <div class="linkcard linkcard--soon" role="note" aria-disabled="true">
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>
           </span>
           <span class="linktext">
             <span class="linktitle">@vyrecmg</span>
-            <span class="linksub">Em criação... 👀</span>
+            <span class="linksub">Em criação...</span>
           </span>
-          <span class="badge-soon">Em andamento</span>
+          <span class="badge">Em andamento</span>
         </div>
-
       </nav>
 
-      <footer>@designerandrecmg and @vyrecmg — 2026</footer>
+      <footer>@designerandrecmg <span class="sep">•</span> @vyrecmg <span class="sep">•</span> 2026</footer>
 
     </div>
   </main>
+
+<script>
+  (function(){
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var touch = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+    var clock = document.getElementById('clock');
+    function tick(){
+      var d = new Date();
+      var h = d.getHours();
+      var m = d.getMinutes();
+      clock.textContent = h + ':' + (m < 10 ? '0' : '') + m;
+    }
+    tick();
+    setInterval(tick, 15000);
+
+    if (reduced || touch) return;
+
+    var orbs = document.querySelectorAll('.orb');
+    var max = 14;
+    var cx = 0.5, cy = 0.5;
+    var raf = null;
+
+    window.addEventListener('pointermove', function(e){
+      cx = e.clientX / window.innerWidth;
+      cy = e.clientY / window.innerHeight;
+      if (!raf) raf = requestAnimationFrame(render);
+    });
+
+    function render(){
+      orbs.forEach(function(orb, i){
+        var dx = (cx - 0.5) * max * (i + 1);
+        var dy = (cy - 0.5) * max * (i + 1);
+        orb.style.transform = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
+      });
+      raf = null;
+    }
+
+    var appgrid = document.querySelector('.appgrid');
+    if (appgrid) appgrid.addEventListener('pointermove', function(e){
+      var items = appgrid.querySelectorAll('.tile');
+      items.forEach(function(t){
+        var r = t.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        t.style.transform = 'translate(' + (px * 8) + 'px,' + (py * 8) + 'px) scale(1.05)';
+      });
+    });
+    if (appgrid) appgrid.addEventListener('pointerleave', function(){
+      appgrid.querySelectorAll('.tile').forEach(function(t){ t.style.transform = ''; });
+    });
+  })();
+</script>
 
 </body>
 </html>
