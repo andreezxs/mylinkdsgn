@@ -357,6 +357,7 @@
   .app:nth-child(2){animation-delay:0.27s;}
   .app:nth-child(3){animation-delay:0.36s;}
   .app:nth-child(4){animation-delay:0.45s;}
+  .app:nth-child(5){animation-delay:0.54s;}
   @keyframes appIn{
     0%{opacity:0; transform:translateY(26px) scale(0.6);}
     100%{opacity:1; transform:translateY(0) scale(1);}
@@ -417,6 +418,7 @@
   .tile--site{background:linear-gradient(150deg,#3DDC97 0%, #0AA97E 55%, #046E77 100%);}
   .tile--behance{background:linear-gradient(150deg,#5C7CFA 0%, #3B5BDB 55%, #2B2A7A 100%);}
   .tile--insta{background:linear-gradient(135deg,#F5C355 0%, #F5556D 45%, #9B3FD0 100%);}
+  .tile--forms{background:linear-gradient(150deg,#64D2FF 0%, #0A84FF 55%, #003A99 100%);}
   .tile--soon{
     background:rgba(255,255,255,0.09);
     border:1px dashed rgba(255,255,255,0.3);
@@ -474,6 +476,7 @@
   .linkcard:nth-child(2){animation-delay:0.36s;}
   .linkcard:nth-child(3){animation-delay:0.44s;}
   .linkcard:nth-child(4){animation-delay:0.52s;}
+  .linkcard:nth-child(5){animation-delay:0.60s;}
   @keyframes cardIn{
     0%{opacity:0; transform:translateY(24px) scale(0.97);}
     100%{opacity:1; transform:translateY(0) scale(1);}
@@ -528,6 +531,8 @@
   .accent-orange .icon{background:rgba(250,85,60,0.18); color:var(--orange); box-shadow:inset 0 0 0 1px rgba(250,85,60,0.3);}
   .accent-green .icon{background:rgba(171,224,84,0.18); color:var(--green); box-shadow:inset 0 0 0 1px rgba(171,224,84,0.3);}
   .accent-mix .icon{background:linear-gradient(135deg, rgba(171,224,84,0.2), rgba(250,85,60,0.2)); color:var(--offwhite); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.18);}
+  .accent-blue .icon{background:rgba(10,132,255,0.18); color:var(--teal); box-shadow:inset 0 0 0 1px rgba(100,210,255,0.3);}
+  .linkcard.accent-blue:hover{border-color:rgba(100,210,255,0.5);}
   .icon svg{width:20px;height:20px;z-index:1;}
 
   .linktext{
@@ -590,6 +595,99 @@
   }
   footer .sep{margin:0 6px; opacity:0.5;}
 
+  .gate{
+    position:fixed;
+    inset:0;
+    z-index:80;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+    background:rgba(5,5,6,0.62);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+  }
+  .gate.is-open{display:flex;}
+  .gate-card{
+    width:100%;
+    max-width:360px;
+    padding:26px 22px 22px;
+    border-radius:24px;
+    background:var(--glass-bg);
+    border:1px solid var(--glass-border);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.18), 0 30px 60px -20px var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    position:relative;
+  }
+  .gate-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:10%; right:10%;
+    height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  }
+  .gate-kicker{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .gate-title{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:-0.03em;
+  }
+  .gate-sub{
+    font-size:13px;
+    color:var(--text-dim);
+    line-height:1.45;
+  }
+  .gate-form{display:flex; flex-direction:column; gap:12px; margin-top:4px;}
+  .gate-input{
+    width:100%;
+    padding:13px 14px;
+    border-radius:14px;
+    border:1px solid var(--glass-border);
+    background:rgba(255,255,255,0.06);
+    color:var(--offwhite);
+    font:inherit;
+    font-size:15px;
+    letter-spacing:0.08em;
+    outline:none;
+  }
+  .gate-input:focus{border-color:rgba(171,224,84,0.55); box-shadow:0 0 0 3px rgba(171,224,84,0.15);}
+  .gate-error{
+    min-height:16px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--orange);
+    opacity:0;
+  }
+  .gate-error.is-on{opacity:1;}
+  .gate-actions{display:flex; gap:10px;}
+  .gate-btn{
+    flex:1;
+    border:0;
+    cursor:pointer;
+    padding:12px 14px;
+    border-radius:14px;
+    font:inherit;
+    font-size:14px;
+    font-weight:700;
+  }
+  .gate-btn--go{
+    background:linear-gradient(135deg, var(--green), #7bb82e);
+    color:#111;
+  }
+  .gate-btn--cancel{
+    background:rgba(255,255,255,0.08);
+    color:var(--offwhite);
+    border:1px solid var(--glass-border);
+  }
+
   @media (max-width:360px){
     .tile{width:60px;height:60px;border-radius:15px;}
     .avatar{width:94px;height:94px;border-radius:25px;}
@@ -597,7 +695,7 @@
 
   /* ---------- tablet ---------- */
   @media (min-width:600px) and (max-width:1023px){
-    .statusbar{max-width:640px;}
+     .statusbar{max-width:640px;}
     .card{max-width:640px; gap:30px;}
     .avatar{width:120px;height:120px;border-radius:32px;}
     .avatar .img{border-radius:26px;}
@@ -618,7 +716,7 @@
 
   /* ---------- desktop ---------- */
   @media (min-width:1024px){
-    .statusbar{max-width:1080px; padding-left:32px; padding-right:32px;}
+     .statusbar{max-width:1080px; padding-left:32px; padding-right:32px;}
     .page{padding:clamp(32px,5vw,56px) 40px 56px;}
     .card{
       max-width:1080px;
@@ -655,11 +753,11 @@
 
   @media (min-width:1440px){
     .card{max-width:1200px;}
-    .statusbar{max-width:1200px;}
+     .statusbar{max-width:1200px;}
   }
 
   @media (prefers-reduced-motion:reduce){
-    .orb, .avatar-glow, .island, .pulse, .tile--soon svg{animation:none;}
+     .orb, .avatar-glow, .island, .pulse, .tile--soon svg{animation:none;}
     .linkcard, .tile, .app, .arrow{transition:none;}
     .app, .linkcard{animation-duration:0.01s;}
   }
@@ -725,14 +823,19 @@
           </span>
           <span class="label">Instagram</span>
         </a>
-        <div class="app" role="note" aria-disabled="true">
+        <a class="app" href="https://tramasocult.vercel.app/" data-gate="https://tramasocult.vercel.app/" target="_blank" rel="noopener noreferrer">
           <span class="tile tile--soon">
-            <span class="badge-soon">Em breve</span>
+            <span class="badge-soon">Obra</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>
           </span>
-          <span class="label">@vyrecmg</span>
-          <span class="sub">em criação</span>
-        </div>
+          <span class="label">Em construção</span>
+        </a>
+        <a class="app" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
+          <span class="tile tile--forms">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>
+          </span>
+          <span class="label">Feedback</span>
+        </a>
       </nav>
       </div>
 
@@ -777,23 +880,54 @@
           </span>
         </a>
 
-        <div class="linkcard linkcard--soon" role="note" aria-disabled="true">
+        <a class="linkcard accent-mix" href="https://tramasocult.vercel.app/" data-gate="https://tramasocult.vercel.app/" target="_blank" rel="noopener noreferrer">
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>
           </span>
           <span class="linktext">
-            <span class="linktitle">@vyrecmg</span>
-            <span class="linksub">Em criação...</span>
+            <span class="linktitle">O site está em construção</span>
+            <span class="linksub">tramasocult.vercel.app</span>
           </span>
-          <span class="badge">Em andamento</span>
-        </div>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </span>
+        </a>
+
+        <a class="linkcard accent-blue" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>
+          </span>
+          <span class="linktext">
+            <span class="linktitle">Conte sua experiencia</span>
+            <span class="linksub">Apenas para testers selecionados</span>
+          </span>
+          <span class="arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </span>
+        </a>
       </nav>
       </div>
 
-      <footer>@designerandrecmg <span class="sep">•</span> @vyrecmg <span class="sep">•</span> 2026</footer>
+      <footer>@designerandrecmg <span class="sep">•</span> 2026</footer>
 
     </div>
   </main>
+
+  <div class="gate" id="gate" aria-hidden="true">
+    <div class="gate-card" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+      <div class="gate-kicker">Acesso restrito</div>
+      <div class="gate-title" id="gateTitle">Digite a senha</div>
+      <p class="gate-sub">Esse link e o formulario sao so para testers selecionados.</p>
+      <form class="gate-form" id="gateForm">
+        <input class="gate-input" id="gatePass" type="password" autocomplete="off" placeholder="Senha" aria-label="Senha">
+        <div class="gate-error" id="gateError">Senha incorreta</div>
+        <div class="gate-actions">
+          <button class="gate-btn gate-btn--cancel" type="button" id="gateCancel">Cancelar</button>
+          <button class="gate-btn gate-btn--go" type="submit">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
 <script>
   (function(){
@@ -809,6 +943,62 @@
     }
     tick();
     setInterval(tick, 15000);
+
+    var PASS = 'TRAMASOCULT';
+    var KEY = 'tramasocult-ok';
+    var pending = '';
+    var gate = document.getElementById('gate');
+    var form = document.getElementById('gateForm');
+    var input = document.getElementById('gatePass');
+    var err = document.getElementById('gateError');
+
+    function unlocked(){
+      try { return sessionStorage.getItem(KEY) === '1'; } catch(e){ return false; }
+    }
+    function remember(){
+      try { sessionStorage.setItem(KEY, '1'); } catch(e){}
+    }
+    function openGate(url){
+      pending = url;
+      err.classList.remove('is-on');
+      input.value = '';
+      gate.classList.add('is-open');
+      gate.setAttribute('aria-hidden', 'false');
+      setTimeout(function(){ input.focus(); }, 40);
+    }
+    function closeGate(){
+      gate.classList.remove('is-open');
+      gate.setAttribute('aria-hidden', 'true');
+      pending = '';
+    }
+    function go(url){
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    document.querySelectorAll('[data-gate]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        var url = el.getAttribute('data-gate');
+        if (unlocked()) go(url);
+        else openGate(url);
+      });
+    });
+    document.getElementById('gateCancel').addEventListener('click', closeGate);
+    gate.addEventListener('click', function(e){
+      if (e.target === gate) closeGate();
+    });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if ((input.value || '').trim().toUpperCase() === PASS){
+        remember();
+        var url = pending;
+        closeGate();
+        if (url) go(url);
+      } else {
+        err.classList.add('is-on');
+        input.focus();
+      }
+    });
 
     if (reduced || touch) return;
 
