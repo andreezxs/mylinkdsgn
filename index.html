@@ -449,7 +449,7 @@
   .tile--behance{background:linear-gradient(160deg,#4F8BFF 0%, #1F5FE0 52%, #0F2E93 100%);}
   .tile--insta{background:linear-gradient(135deg,#FEDA75 0%, #FA7E1E 28%, #D62976 55%, #962FBF 78%, #4F5BD5 100%);}
   .tile--forms{background:linear-gradient(160deg,#5AC8FA 0%, #0A84FF 52%, #0040DD 100%);}
-  .tile--soon{background:linear-gradient(160deg,#4a4a54 0%, #1c1c22 58%, #0b0b0e 100%);}
+   .tile--soon{background:linear-gradient(160deg,#4a4a54 0%, #1c1c22 58%, #0b0b0e 100%);}
   .badge-soon{
     position:absolute;
     top:5px; right:5px;
@@ -532,7 +532,7 @@
   .linkcard:nth-child(2){animation-delay:0.36s;}
   .linkcard:nth-child(3){animation-delay:0.44s;}
   .linkcard:nth-child(4){animation-delay:0.52s;}
-  .linkcard:nth-child(5){animation-delay:0.60s;}
+   .linkcard:nth-child(5){animation-delay:0.60s;}
   @keyframes cardIn{
     0%{opacity:0; transform:translateY(24px) scale(0.97);}
     100%{opacity:1; transform:translateY(0) scale(1);}
@@ -691,11 +691,82 @@
   .linkcard:active .arrow{transform:translateX(1px) scale(0.95);}
   .arrow svg{width:16px;height:16px;}
 
-  .linkcard--soon{
-    cursor:default;
-    border-style:dashed;
-    opacity:0.85;
-  }
+    .embedcard{
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      width:100%;
+      padding:15px;
+      border-radius:20px;
+      background:var(--glass-bg);
+      border:1px solid var(--glass-border);
+      backdrop-filter:var(--glass-blur);
+      -webkit-backdrop-filter:var(--glass-blur);
+      box-shadow:inset 0 1px 1px rgba(255,255,255,0.16), 0 18px 34px -16px var(--shadow);
+      overflow:hidden;
+      isolation:isolate;
+      --spot:rgba(250,85,60,0.30);
+      animation:cardIn 0.9s var(--spring) backwards;
+      animation-delay:0.28s;
+    }
+    .embedcard::before{
+      content:'';
+      position:absolute;
+      top:0; left:8%; right:8%;
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      z-index:2;
+      pointer-events:none;
+    }
+    .embedcard-head{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      text-decoration:none;
+      color:var(--offwhite);
+      position:relative;
+      z-index:1;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .embedcard-head .arrow{
+      margin-left:auto;
+    }
+    .embedcard-head:hover .arrow,
+    .embedcard-head:focus-visible .arrow{transform:translateX(5px) scale(1.18); opacity:1;}
+    .embedcard-preview{
+      position:relative;
+      z-index:1;
+      width:100%;
+      height:clamp(240px, 68vw, 420px);
+      border-radius:16px;
+      overflow:hidden;
+      background:#0a0a0c;
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);
+      -webkit-overflow-scrolling:touch;
+    }
+    .embedcard-preview iframe{
+      width:calc(100% + 18px);
+      height:100%;
+      border:0;
+      display:block;
+      background:#0a0a0c;
+    }
+    .embedcard-preview::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      border-radius:inherit;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.14);
+    }
+
+   .linkcard--soon{
+     cursor:default;
+     border-style:dashed;
+     opacity:0.85;
+   }
   .linkcard--soon:hover,
   .linkcard--soon:focus-visible{
     transform:none;
@@ -717,15 +788,335 @@
     border-radius:999px;
   }
 
-  footer{
-    margin-top:10px;
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:var(--text-faint);
-    text-align:center;
-  }
-  footer .sep{margin:0 6px; opacity:0.5;}
+   footer{
+     margin-top:10px;
+     font-size:11px;
+     letter-spacing:0.1em;
+     text-transform:uppercase;
+     color:var(--text-faint);
+     text-align:center;
+   }
+   footer .sep{margin:0 6px; opacity:0.5;}
+
+    .playlists{
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
+      margin-top:40px;
+      padding:22px 16px 20px;
+      border-radius:24px;
+      background:var(--glass-bg);
+      border:1px solid var(--glass-border);
+      backdrop-filter:var(--glass-blur);
+      -webkit-backdrop-filter:var(--glass-blur);
+      box-shadow:inset 0 1px 1px rgba(255,255,255,0.16), 0 18px 34px -16px var(--shadow);
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+    }
+   .playlists::before{
+     content:'';
+     position:absolute;
+     top:0; left:10%; right:10%;
+     height:1px;
+     background:linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+     z-index:2;
+     pointer-events:none;
+   }
+   .section-head{
+     display:flex;
+     flex-direction:column;
+     align-items:center;
+     gap:8px;
+     position:relative;
+     z-index:1;
+   }
+   .section-kicker{
+     font-size:12px;
+     font-weight:700;
+     letter-spacing:0.16em;
+     text-transform:uppercase;
+     color:var(--offwhite);
+     text-align:center;
+   }
+   .section-line{
+     width:44px;
+     height:3px;
+     border-radius:2px;
+     background:linear-gradient(90deg, var(--green), var(--orange));
+   }
+
+    .vinyl-stage{
+      position:relative;
+      z-index:1;
+      width:220px;
+      height:220px;
+      display:grid;
+      place-items:center;
+      animation:vinylDrop 1.15s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes vinylDrop{
+      0%{opacity:0; transform:scale(0.72) translateY(28px);}
+      100%{opacity:1; transform:scale(1) translateY(0);}
+    }
+    .turntable{
+      position:relative;
+      width:220px;
+      height:220px;
+      display:grid;
+      place-items:center;
+    }
+    .platter{
+      position:absolute;
+      inset:8px;
+      border-radius:50%;
+      background:radial-gradient(circle at 50% 50%, #2a2a32 0%, #121216 62%, #0a0a0c 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.08),
+        inset 0 10px 18px rgba(255,255,255,0.04),
+        0 22px 40px -16px rgba(0,0,0,0.7);
+    }
+    .vinyl-bloom{
+      position:absolute;
+      inset:18px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(171,224,84,0.28), rgba(250,85,60,0.12) 42%, transparent 70%);
+      filter:blur(18px);
+      animation:bloomPulse 4.6s ease-in-out infinite;
+      pointer-events:none;
+      z-index:0;
+    }
+    @keyframes bloomPulse{
+      0%,100%{opacity:0.45; transform:scale(0.92);}
+      50%{opacity:0.9; transform:scale(1.08);}
+    }
+    .vinyl-wrap{
+      position:relative;
+      z-index:1;
+      width:188px;
+      height:188px;
+      transform-origin:center;
+      transition:transform 0.7s cubic-bezier(0.34,1.56,0.64,1);
+      will-change:transform;
+    }
+    .vinyl-wrap.is-swap{
+      animation:vinylSpring 0.85s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes vinylSpring{
+      0%{transform:scale(1) rotate(-8deg);}
+      38%{transform:scale(0.82) rotate(6deg);}
+      68%{transform:scale(1.08) rotate(-2deg);}
+      100%{transform:scale(1) rotate(0deg);}
+    }
+     .vinyl{
+       position:relative;
+       width:188px;
+       height:188px;
+       border-radius:50%;
+       background:
+         radial-gradient(circle at 50% 50%,
+           transparent 0 18.2%,
+           #141418 18.3%,
+           #141418 19.2%,
+           transparent 19.3%),
+         repeating-radial-gradient(circle at 50% 50%,
+           #0c0c10 0px,
+           #0c0c10 1.4px,
+           #17171c 2.2px,
+           #09090c 3.1px);
+       box-shadow:
+         0 0 0 1px rgba(255,255,255,0.07),
+         inset 0 0 28px rgba(0,0,0,0.55),
+         0 10px 28px -10px rgba(0,0,0,0.7);
+       animation:vinylSpin 5.6s linear infinite;
+       will-change:transform;
+     }
+     .vinyl.is-fast{animation-duration:1.8s;}
+     .vinyl-label{
+       position:absolute;
+       left:50%;
+       top:50%;
+       width:36%;
+       height:36%;
+       object-fit:cover;
+       border-radius:50%;
+       transform:translate(-50%,-50%);
+       box-shadow:0 0 0 3px #16161a, 0 4px 10px rgba(0,0,0,0.45);
+       background:#111;
+       transition:opacity 0.28s cubic-bezier(0.32,0.72,0,1), filter 0.28s ease;
+     }
+     .vinyl-label.is-out{
+       opacity:0;
+       filter:blur(6px) saturate(1.4);
+     }
+     .vinyl-hole{
+       position:absolute;
+       left:50%;
+       top:50%;
+       width:9px;
+       height:9px;
+       border-radius:50%;
+       background:#050506;
+       transform:translate(-50%,-50%);
+       box-shadow:inset 0 0 0 1px rgba(255,255,255,0.22), 0 0 0 2px #1c1c22;
+       z-index:2;
+     }
+    @keyframes vinylSpin{
+      to{transform:rotate(360deg);}
+    }
+    .vinyl-gloss{
+      position:absolute;
+      inset:16px;
+      border-radius:50%;
+      pointer-events:none;
+      z-index:2;
+      background:
+        radial-gradient(120% 70% at 28% 18%, rgba(255,255,255,0.42), transparent 42%),
+        linear-gradient(125deg, rgba(255,255,255,0.16) 0%, transparent 36%, transparent 62%, rgba(255,255,255,0.08) 100%);
+      mix-blend-mode:screen;
+      animation:glossSweep 5.2s cubic-bezier(0.32,0.72,0,1) infinite;
+    }
+    @keyframes glossSweep{
+      0%,100%{opacity:0.55; transform:rotate(0deg) scale(1);}
+      50%{opacity:0.95; transform:rotate(12deg) scale(1.03);}
+    }
+    .tonearm{
+      position:absolute;
+      width:7px;
+      height:118px;
+      right:22px;
+      top:10px;
+      background:linear-gradient(180deg,#e8e4dc,#9a968e);
+      border-radius:6px;
+      transform:rotate(-18deg);
+      transform-origin:50% 10px;
+      box-shadow:0 10px 18px rgba(0,0,0,0.4);
+      z-index:3;
+      pointer-events:none;
+      animation:armDrop 1.35s cubic-bezier(0.34,1.56,0.64,1) 0.45s both;
+    }
+    @keyframes armDrop{
+      0%{transform:rotate(-18deg);}
+      70%{transform:rotate(27deg);}
+      100%{transform:rotate(24deg);}
+    }
+    .tonearm.is-lift{animation:armLift 0.55s cubic-bezier(0.32,0.72,0,1) both;}
+    @keyframes armLift{
+      0%{transform:rotate(24deg);}
+      100%{transform:rotate(-12deg);}
+    }
+    .tonearm::before{
+      content:'';
+      position:absolute;
+      top:-8px;
+      left:50%;
+      width:20px;
+      height:20px;
+      margin-left:-10px;
+      border-radius:50%;
+      background:radial-gradient(circle at 35% 30%, #f2eee6, #b8b2a8);
+      box-shadow:0 4px 10px rgba(0,0,0,0.35);
+    }
+    .tonearm::after{
+      content:'';
+      position:absolute;
+      bottom:-4px;
+      left:50%;
+      width:16px;
+      height:12px;
+      margin-left:-8px;
+      border-radius:3px;
+      background:#2a2a30;
+      box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    .crate{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:22px 16px;
+      position:relative;
+      z-index:1;
+      padding:4px 4px 2px;
+    }
+    .sleeve{
+      width:86px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:9px;
+      text-decoration:none;
+      color:var(--offwhite);
+      position:relative;
+      -webkit-tap-highlight-color:transparent;
+      outline:none;
+    }
+    .sleeve-disc{
+      position:absolute;
+      top:7px;
+      left:14%;
+      width:78%;
+      aspect-ratio:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%, #d8d4cc 0 8%, #1a1a1e 8.4% 19%, transparent 19.2%),
+        repeating-radial-gradient(circle at 50% 50%, #111 0 1.2px, #1a1a1a 2px, #0a0a0a 3px);
+      z-index:0;
+      transform:translateX(8%);
+      transition:transform 0.55s var(--spring);
+      box-shadow:0 10px 18px -8px rgba(0,0,0,0.65);
+      pointer-events:none;
+    }
+    .sleeve:hover .sleeve-disc,
+    .sleeve:focus-visible .sleeve-disc,
+    .sleeve.is-on .sleeve-disc{
+      transform:translateX(42%);
+    }
+    .sleeve-cover{
+      position:relative;
+      z-index:1;
+      width:86px;
+      height:86px;
+      border-radius:6px;
+      overflow:hidden;
+      background:#111;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        0 14px 26px -12px rgba(0,0,0,0.7);
+      transition:transform 0.55s var(--spring), box-shadow 0.4s ease;
+    }
+    .sleeve-cover img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .sleeve:hover .sleeve-cover,
+    .sleeve:focus-visible .sleeve-cover,
+    .sleeve.is-on .sleeve-cover{
+      transform:translateY(-7px) rotate(-3deg);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        0 22px 32px -14px rgba(0,0,0,0.75);
+    }
+   .sleeve:focus-visible .sleeve-cover{
+     outline:2px solid var(--offwhite);
+     outline-offset:3px;
+   }
+   .sleeve-name{
+     font-size:10px;
+     font-weight:700;
+     letter-spacing:0.06em;
+     text-transform:uppercase;
+     text-align:center;
+     max-width:96px;
+     line-height:1.3;
+     color:rgba(245,242,234,0.88);
+     text-shadow:0 1px 3px rgba(0,0,0,0.5);
+   }
 
   .gate{
     position:fixed;
@@ -875,7 +1266,9 @@
     .app .label{font-size:13px; max-width:92px;}
     .app .sub{font-size:11px; max-width:92px;}
     .links{display:grid; grid-template-columns:1fr; gap:16px; margin-top:0;}
-    .linkcard{padding:20px 22px; border-radius:24px; gap:18px;}
+     .linkcard{padding:20px 22px; border-radius:24px; gap:18px;}
+     .embedcard{padding:20px; border-radius:24px;}
+     .embedcard-preview{height:clamp(340px, 48vh, 520px); border-radius:18px;}
     .icon{width:52px;height:52px;border-radius:15px;}
     .icon svg{width:24px;height:24px;}
     .linktitle{font-size:17px;}
@@ -888,12 +1281,24 @@
      .statusbar{max-width:1200px;}
   }
 
-  @media (prefers-reduced-motion:reduce){
-     .orb, .avatar-glow, .island, .pulse, .appgrid.is-editing .tile, .ripple{animation:none;}
-    .linkcard, .tile, .app, .arrow, .icon, .icon svg, .linkcard-glow{transition:none;}
-    .app, .linkcard{animation-duration:0.01s;}
-    .linkcard:hover, .linkcard:focus-visible, .linkcard:hover .icon, .linkcard:hover .arrow{transform:none;}
-  }
+     @media (min-width:600px){
+     .vinyl-stage, .turntable{width:260px; height:260px;}
+     .vinyl, .vinyl-wrap{width:224px; height:224px;}
+     .sleeve{width:96px;}
+     .sleeve-cover{width:96px; height:96px;}
+     .sleeve-name{font-size:11px; max-width:110px;}
+   }
+   @media (min-width:1024px){
+     .playlists{padding:26px 22px 24px; gap:22px;}
+     .crate{gap:26px 18px;}
+   }
+
+   @media (prefers-reduced-motion:reduce){
+      .orb, .avatar-glow, .island, .pulse, .appgrid.is-editing .tile, .ripple, .vinyl, .vinyl-stage, .vinyl-bloom, .vinyl-gloss, .tonearm, .vinyl-wrap{animation:none;}
+     .linkcard, .tile, .app, .arrow, .icon, .icon svg, .linkcard-glow, .sleeve-cover, .sleeve-disc{transition:none;}
+     .app, .linkcard{animation-duration:0.01s;}
+     .linkcard:hover, .linkcard:focus-visible, .linkcard:hover .icon, .linkcard:hover .arrow{transform:none;}
+   }
 </style>
 </head>
 <body>
@@ -964,29 +1369,34 @@
           </span>
           <span class="label">Em construção</span>
         </a>
-        <a class="app" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
-          <span class="tile tile--forms">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><polyline points="14 3 14 8 19 8"></polyline><line x1="8.5" y1="13" x2="15.5" y2="13"></line><line x1="8.5" y1="16.5" x2="12.5" y2="16.5"></line></svg>
-          </span>
+         <a class="app" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
+           <span class="tile tile--forms">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><polyline points="14 3 14 8 19 8"></polyline><line x1="8.5" y1="13" x2="15.5" y2="13"></line><line x1="8.5" y1="16.5" x2="12.5" y2="16.5"></line></svg>
+           </span>
           <span class="label">Feedback</span>
-        </a>
-      </nav>
+          </a>
+        </nav>
       </div>
 
       <div class="links-col">
       <nav class="links" aria-label="Links">
-        <a class="linkcard accent-orange" href="https://designerandrecmg.vercel.app/" target="_blank" rel="noopener noreferrer">
-          <span class="icon tile--site">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3.2 9h17.6M3.2 15h17.6"></path><path d="M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
-          </span>
-          <span class="linktext">
-            <span class="linktitle">Site &amp; Portfólio</span>
-            <span class="linksub">designerandrecmg.vercel.app</span>
-          </span>
-          <span class="arrow">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-          </span>
-        </a>
+        <div class="embedcard accent-orange">
+          <a class="embedcard-head" href="https://designerandrecmg.vercel.app/" target="_blank" rel="noopener noreferrer">
+            <span class="icon tile--site">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3.2 9h17.6M3.2 15h17.6"></path><path d="M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"></path></svg>
+            </span>
+            <span class="linktext">
+              <span class="linktitle">Site &amp; Portfólio</span>
+              <span class="linksub">designerandrecmg.vercel.app</span>
+            </span>
+            <span class="arrow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+            </span>
+          </a>
+          <div class="embedcard-preview">
+            <iframe src="https://designerandrecmg.vercel.app/" title="Site e Portfólio de designerandrecmg" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
 
         <a class="linkcard accent-green" href="https://www.behance.net/designerandrecmg" target="_blank" rel="noopener noreferrer">
           <span class="icon tile--behance">
@@ -1027,7 +1437,7 @@
           </span>
         </a>
 
-        <a class="linkcard accent-blue" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
+         <a class="linkcard accent-blue" href="https://forms.gle/Cxa9U63Z83znPkru7" data-gate="https://forms.gle/Cxa9U63Z83znPkru7" target="_blank" rel="noopener noreferrer">
           <span class="icon tile--forms">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><polyline points="14 3 14 8 19 8"></polyline><line x1="8.5" y1="13" x2="15.5" y2="13"></line><line x1="8.5" y1="16.5" x2="12.5" y2="16.5"></line></svg>
           </span>
@@ -1039,10 +1449,60 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
           </span>
         </a>
-      </nav>
-      </div>
+       </nav>
 
-      <footer>@designerandrecmg <span class="sep">•</span> 2026</footer>
+       <section class="playlists" aria-labelledby="playlistsTitle">
+         <div class="section-head">
+           <div class="section-kicker" id="playlistsTitle">Minhas playlist Spotify</div>
+           <div class="section-line"></div>
+         </div>
+
+         <div class="vinyl-stage">
+           <div class="turntable">
+             <div class="platter"></div>
+             <div class="vinyl-bloom"></div>
+             <div class="vinyl-wrap" id="vinylWrap">
+               <div class="vinyl" id="vinyl">
+                 <img class="vinyl-label" id="vinylLabel" src="webp/pl-light-music.jpg" alt="">
+                 <span class="vinyl-hole"></span>
+               </div>
+             </div>
+             <div class="vinyl-gloss"></div>
+             <div class="tonearm" id="tonearm"></div>
+           </div>
+         </div>
+
+         <nav class="crate" aria-label="Playlists do Spotify">
+           <a class="sleeve is-on" href="https://open.spotify.com/playlist/58KYQaoDEbUdyt6fY9EJ7Y" target="_blank" rel="noopener noreferrer" data-cover="webp/pl-light-music.jpg">
+             <span class="sleeve-disc" aria-hidden="true"></span>
+             <span class="sleeve-cover"><img src="webp/pl-light-music.jpg" alt="Capa LIGHT MUSIC"></span>
+             <span class="sleeve-name">LIGHT MUSIC</span>
+           </a>
+           <a class="sleeve" href="https://open.spotify.com/playlist/3wxl9KA7RPgNcM7cEkH1J5" target="_blank" rel="noopener noreferrer" data-cover="webp/pl-eletro.jpg">
+             <span class="sleeve-disc" aria-hidden="true"></span>
+             <span class="sleeve-cover"><img src="webp/pl-eletro.jpg" alt="Capa ELETRO AND MEGA"></span>
+             <span class="sleeve-name">ELETRO AND MEGA</span>
+           </a>
+           <a class="sleeve" href="https://open.spotify.com/playlist/1qGGbRlQrq2BTA2FHep5AV" target="_blank" rel="noopener noreferrer" data-cover="webp/pl-country.jpg">
+             <span class="sleeve-disc" aria-hidden="true"></span>
+             <span class="sleeve-cover"><img src="webp/pl-country.jpg" alt="Capa COUNTRY"></span>
+             <span class="sleeve-name">COUNTRY</span>
+           </a>
+           <a class="sleeve" href="https://open.spotify.com/playlist/489dF65HicfgvUEPPShD25" target="_blank" rel="noopener noreferrer" data-cover="webp/pl-buenas.jpg">
+             <span class="sleeve-disc" aria-hidden="true"></span>
+             <span class="sleeve-cover"><img src="webp/pl-buenas.jpg" alt="Capa BUENAS"></span>
+             <span class="sleeve-name">BUENAS</span>
+           </a>
+           <a class="sleeve" href="https://open.spotify.com/playlist/4ogwbjrBFbNtEblPquUyO0" target="_blank" rel="noopener noreferrer" data-cover="webp/pl-yes.jpg">
+             <span class="sleeve-disc" aria-hidden="true"></span>
+             <span class="sleeve-cover"><img src="webp/pl-yes.jpg" alt="Capa YES IN THE SUB"></span>
+             <span class="sleeve-name">YES IN THE SUB</span>
+           </a>
+         </nav>
+       </section>
+       </div>
+
+       <footer>@designerandrecmg <span class="sep">•</span> 2026</footer>
 
     </div>
   </main>
@@ -1544,6 +2004,45 @@
           card.style.removeProperty('--my');
           if (icon) icon.style.transform = '';
         });
+      });
+
+      var vinyl = document.getElementById('vinyl');
+      var vinylWrap = document.getElementById('vinylWrap');
+      var vinylLabel = document.getElementById('vinylLabel');
+      var tonearm = document.getElementById('tonearm');
+      var sleeves = document.querySelectorAll('.sleeve');
+      function setVinyl(cover, sleeve){
+        sleeves.forEach(function(s){ s.classList.toggle('is-on', s === sleeve); });
+        if (!cover || (vinylLabel && vinylLabel.getAttribute('src') === cover)) return;
+        if (vinylWrap){
+          vinylWrap.classList.remove('is-swap');
+          void vinylWrap.offsetWidth;
+          vinylWrap.classList.add('is-swap');
+        }
+        if (tonearm){
+          tonearm.classList.remove('is-lift');
+          void tonearm.offsetWidth;
+          tonearm.classList.add('is-lift');
+          clearTimeout(tonearm._t);
+          tonearm._t = setTimeout(function(){ tonearm.classList.remove('is-lift'); }, 560);
+        }
+        if (vinylLabel){
+          vinylLabel.classList.add('is-out');
+          setTimeout(function(){
+            vinylLabel.setAttribute('src', cover);
+            vinylLabel.classList.remove('is-out');
+          }, 180);
+        }
+        if (vinyl){
+          vinyl.classList.add('is-fast');
+          clearTimeout(vinyl._t);
+          vinyl._t = setTimeout(function(){ vinyl.classList.remove('is-fast'); }, 1600);
+        }
+      }
+      sleeves.forEach(function(sleeve){
+        sleeve.addEventListener('mouseenter', function(){ setVinyl(sleeve.getAttribute('data-cover'), sleeve); });
+        sleeve.addEventListener('focus', function(){ setVinyl(sleeve.getAttribute('data-cover'), sleeve); });
+        sleeve.addEventListener('click', function(){ setVinyl(sleeve.getAttribute('data-cover'), sleeve); });
       });
 
       var linkrail = document.querySelector('.links');
